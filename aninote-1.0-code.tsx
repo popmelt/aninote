@@ -1,3 +1,8 @@
+/** aninote 1.0 - figma widget */
+/** aninote is an animation annotation widget for figma  */
+/** created by popmelt */
+/** published 09.06.2022 */
+
 const { widget } = figma;
 const {
   AutoLayout,

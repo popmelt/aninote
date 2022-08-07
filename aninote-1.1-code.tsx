@@ -44,9 +44,10 @@ function Widget() {
       padding={20}
       width={300}
     >
-      {elementBlock.map((elementBlock, index) => (
+      {elementBlock.map((singleElementBlock, index) => (
         <AutoLayout
           name="element-block"
+          key={index}
           effect={{
             type: "inner-shadow",
             color: "#00000080",
@@ -116,6 +117,10 @@ function Widget() {
               <AutoLayout
                 name="element-add-handler"
                 onClick={() => handleAddElementBlock()}
+                hoverStyle={{
+                  opacity: 1,
+                }}
+                opacity={0.5}
                 x={-44}
                 y={4}
                 positioning="absolute"
@@ -125,7 +130,7 @@ function Widget() {
               >
                 <Frame
                   name="icon-add"
-                  stroke="#8981F780"
+                  stroke="#8981F7"
                   cornerRadius={14}
                   width={16}
                   height={16}
@@ -137,8 +142,8 @@ function Widget() {
                     height={8}
                     width={8}
                     src="<svg width='8' height='8' viewBox='0 0 8 8' fill='none' xmlns='http://www.w3.org/2000/svg'>
-      <path d='M3 1C3 0.447715 3.44772 0 4 0C4.55228 0 5 0.447715 5 1V7C5 7.55228 4.55228 8 4 8C3.44772 8 3 7.55228 3 7V1Z' fill='#8981F7' fill-opacity='0.5'/>
-      <path d='M1 5C0.447715 5 0 4.55228 0 4C0 3.44772 0.447715 3 1 3H7C7.55228 3 8 3.44772 8 4C8 4.55228 7.55228 5 7 5H1Z' fill='#8981F7' fill-opacity='0.5'/>
+      <path d='M3 1C3 0.447715 3.44772 0 4 0C4.55228 0 5 0.447715 5 1V7C5 7.55228 4.55228 8 4 8C3.44772 8 3 7.55228 3 7V1Z' fill='#8981F7' fill-opacity='1'/>
+      <path d='M1 5C0.447715 5 0 4.55228 0 4C0 3.44772 0.447715 3 1 3H7C7.55228 3 8 3.44772 8 4C8 4.55228 7.55228 5 7 5H1Z' fill='#8981F7' fill-opacity='1'/>
       </svg>
       "
                   />
@@ -146,10 +151,10 @@ function Widget() {
               </AutoLayout>
               <Input
                 value={elementInput}
-                placeholder="element-name"
                 onTextEditEnd={(e) => {
                   setElementInput(e.characters);
                 }}
+                placeholder="element-name"
                 fontSize={12}
                 fill="#8981F7"
                 lineHeight={20}
@@ -164,34 +169,40 @@ function Widget() {
                 }}
                 inputBehavior="wrap"
               />
-              <AutoLayout
-                name="element-remove-handler"
-                onClick={() => handleRemoveElementBlock(index)}
-                fill="#1D1D1D"
-                cornerRadius={4}
-                overflow="visible"
-                spacing={8}
-                padding={4}
-              >
-                <Frame
-                  name="icon-remove"
-                  stroke="#8981F780"
-                  cornerRadius={14}
-                  width={16}
-                  height={16}
+              {elementBlock.length > 1 && (
+                <AutoLayout
+                  name="element-remove-handler"
+                  onClick={() => handleRemoveElementBlock(index)}
+                  hoverStyle={{
+                    opacity: 1,
+                  }}
+                  opacity={0.5}
+                  fill="#1D1D1D"
+                  cornerRadius={4}
+                  overflow="visible"
+                  spacing={8}
+                  padding={4}
                 >
-                  <Rectangle
-                    name="icon-minus"
-                    x={4}
-                    y={9}
-                    fill="#8981F780"
-                    cornerRadius={4}
-                    rotation={90}
-                    width={2}
-                    height={8}
-                  />
-                </Frame>
-              </AutoLayout>
+                  <Frame
+                    name="icon-remove"
+                    stroke="#8981F7"
+                    cornerRadius={14}
+                    width={16}
+                    height={16}
+                  >
+                    <Rectangle
+                      name="icon-minus"
+                      x={4}
+                      y={9}
+                      fill="#8981F7"
+                      cornerRadius={4}
+                      rotation={90}
+                      width={2}
+                      height={8}
+                    />
+                  </Frame>
+                </AutoLayout>
+              )}
             </AutoLayout>
             <AutoLayout
               name="attribute-block"

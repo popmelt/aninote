@@ -17,21 +17,22 @@ const {
 } = widget;
 
 function Widget() {
-  const [elementInput, setElementInput] = useSyncedState("element-input", "");
-  const [elementBlock, setElementBlock] = useSyncedState("", [
-    {
-      elementName: "",
-    },
+  const [elementList, setElementList] = useSyncedState("", [
+    { elementName: "" },
   ]);
 
   const handleAddElementBlock = () => {
-    setElementBlock([...elementBlock, { elementName: "" }]);
+    setElementList([...elementList, { elementName: "" }]);
   };
 
   const handleRemoveElementBlock = (index: number) => {
-    const values = [...elementBlock];
-    values.splice(index, 1);
-    setElementBlock(values);
+    const list = [...elementList];
+    list.splice(index, 1);
+    setElementList(list);
+  };
+
+  const handleElementInput = (index: number, onTextEditEnd: any) => {
+    console.log(index, onTextEditEnd);
   };
 
   return (
@@ -44,7 +45,7 @@ function Widget() {
       padding={20}
       width={300}
     >
-      {elementBlock.map((singleElementBlock, index) => (
+      {elementList.map((elementBlock, index) => (
         <AutoLayout
           name="element-block"
           key={index}
@@ -150,10 +151,9 @@ function Widget() {
                 </Frame>
               </AutoLayout>
               <Input
-                value={elementInput}
-                onTextEditEnd={(e) => {
-                  setElementInput(e.characters);
-                }}
+                value={elementBlock.elementName}
+                key={index}
+                onTextEditEnd={(event) => handleElementInput(index, event)}
                 placeholder="element-name"
                 fontSize={12}
                 fill="#8981F7"
@@ -169,9 +169,8 @@ function Widget() {
                 }}
                 inputBehavior="wrap"
               />
-              {elementBlock.length > 1 && (
+              {elementList.length > 1 && (
                 <AutoLayout
-                  name="element-remove-handler"
                   onClick={() => handleRemoveElementBlock(index)}
                   hoverStyle={{
                     opacity: 1,

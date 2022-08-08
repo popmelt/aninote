@@ -18,11 +18,13 @@ const {
 
 function Widget() {
   const [elementList, setElementList] = useSyncedState("", [
-    { elementName: "" },
+    { elementName: "", elementValue: "" },
   ]);
 
-  const handleAddElementBlock = () => {
-    setElementList([...elementList, { elementName: "" }]);
+  const handleAddElementBlock = (index: number) => {
+    const tempElementList = [...elementList];
+    tempElementList.splice(index + 1, 0, { elementName: "", elementValue: "" });
+    setElementList(tempElementList);
   };
 
   const handleRemoveElementBlock = (index: number) => {
@@ -33,6 +35,9 @@ function Widget() {
 
   const handleElementInput = (index: number, onTextEditEnd: any) => {
     console.log(index, onTextEditEnd);
+    const tempElementList = [...elementList];
+    tempElementList[index].elementValue = onTextEditEnd.characters;
+    setElementList(tempElementList);
   };
 
   return (
@@ -117,7 +122,7 @@ function Widget() {
             >
               <AutoLayout
                 name="element-add-handler"
-                onClick={() => handleAddElementBlock()}
+                onClick={() => handleAddElementBlock(index)}
                 hoverStyle={{
                   opacity: 1,
                 }}
@@ -151,8 +156,7 @@ function Widget() {
                 </Frame>
               </AutoLayout>
               <Input
-                value={elementBlock.elementName}
-                key={index}
+                value={elementBlock.elementValue}
                 onTextEditEnd={(event) => handleElementInput(index, event)}
                 placeholder="element-name"
                 fontSize={12}

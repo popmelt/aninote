@@ -1,7 +1,8 @@
 /** aninote 1.0 - figma widget */
 /** aninote is an animation annotation widget for figma  */
 /** created by popmelt */
-/** published 09.06.2022 */
+/** published August.10.2022 */
+/** last updated August.11.2022 */
 
 const { widget } = figma;
 const {
@@ -14,9 +15,34 @@ const {
   Text,
   useSyncedState,
   Input,
+  usePropertyMenu,
 } = widget;
 
 function Aninote() {
+  const [color, setColor] = useSyncedState("theme", "#9B99FF");
+  usePropertyMenu(
+    [
+      {
+        itemType: "color-selector",
+        propertyName: "colors",
+        tooltip: "Color selector",
+        selectedOption: color,
+        options: [
+          { option: "#9B99FF", tooltip: "lilac" },
+          { option: "#94D5FF", tooltip: "baby" },
+          { option: "#B7FFBD", tooltip: "mint" },
+          { option: "#FEFF8C", tooltip: "daisy" },
+          { option: "#FFA3A6", tooltip: "rose" },
+        ],
+      },
+    ],
+    ({ propertyName, propertyValue }) => {
+      if (propertyName === "colors") {
+        setColor(propertyValue);
+      }
+    }
+  );
+
   const [open, setOpen] = useSyncedState("open", true);
 
   const [eventTitleInput, setEventTitleInput] = useSyncedState(
@@ -91,7 +117,7 @@ function Aninote() {
 
   const handleRemovePropertyBlock = (index: number, propertyIndex: number) => {
     const tempElementList = [...elementList];
-    tempElementList[index].propertyBlock.splice(index, 1);
+    tempElementList[index].propertyBlock.splice(propertyIndex, 1);
     setElementList(tempElementList);
   };
 
@@ -107,7 +133,7 @@ function Aninote() {
         onClick={() => {
           setOpen(!open);
         }}
-        fill="#8981F7"
+        fill={color}
         cornerRadius={{
           topLeft: 0,
           topRight: 16,
@@ -123,7 +149,7 @@ function Aninote() {
           hidden={open}
           x={14}
           y={14}
-          fill="#8981F7"
+          fill={color}
           overflow="visible"
           direction="vertical"
           width={20}
@@ -146,7 +172,7 @@ function Aninote() {
           hidden={!open}
           x={14}
           y={14}
-          fill="#8981F7"
+          fill={color}
           overflow="visible"
           direction="vertical"
           width={20}
@@ -167,19 +193,32 @@ function Aninote() {
       </Frame>
       <AutoLayout
         name="notepad"
-        effect={{
-          type: "drop-shadow",
-          color: "#0000001A",
-          offset: {
-            x: 8,
-            y: 4,
-          },
-          blur: 20,
-          showShadowBehindNode: false,
-        }}
+        effect={
+          !open
+            ? {
+                type: "drop-shadow",
+                color: "#0003",
+                offset: {
+                  x: 0,
+                  y: 0,
+                },
+                blur: 0,
+                showShadowBehindNode: false,
+              }
+            : {
+                type: "drop-shadow",
+                color: "#0003",
+                offset: {
+                  x: 0,
+                  y: 4,
+                },
+                blur: 20,
+                showShadowBehindNode: false,
+              }
+        }
         x={56}
         fill="#2B2B2B"
-        stroke={open ? "#2B2B2B" : "#2B2B2B"}
+        stroke={open ? "#232323" : "#232323"}
         cornerRadius={16}
         overflow="visible"
         direction="vertical"
@@ -189,7 +228,7 @@ function Aninote() {
             ? { vertical: 10, horizontal: 12 }
             : { vertical: 7, horizontal: 12 }
         }
-        width={380}
+        width={360}
       >
         <AutoLayout
           name="event-title-block"
@@ -386,21 +425,30 @@ function Aninote() {
               >
                 <Frame
                   name="icon-add"
-                  stroke="#8981F7"
+                  stroke={color}
                   cornerRadius={14}
                   width={16}
                   height={16}
                 >
-                  <SVG
-                    name="icon-plus"
+                  <Rectangle
+                    name="icon-plus-h"
                     x={4}
-                    y={4}
+                    y={9}
+                    fill={color}
+                    cornerRadius={4}
+                    rotation={90}
+                    width={2}
                     height={8}
+                  />
+                  <Rectangle
+                    name="icon-plus-v"
+                    x={7}
+                    y={12}
+                    fill={color}
+                    cornerRadius={4}
+                    rotation={90}
                     width={8}
-                    src="<svg width='8' height='8' viewBox='0 0 8 8' fill='none' xmlns='http://www.w3.org/2000/svg'>
-<path fill-rule='evenodd' clip-rule='evenodd' d='M3 7C3 7.55228 3.44772 8 4 8C4.55228 8 5 7.55228 5 7V5H7C7.55228 5 8 4.55228 8 4C8 3.44772 7.55228 3 7 3H5V1C5 0.447715 4.55228 0 4 0C3.44772 0 3 0.447715 3 1V3H1C0.447715 3 0 3.44772 0 4C0 4.55228 0.447715 5 1 5H3V7Z' fill='#8981F7'/>
-</svg>
-"
+                    height={2}
                   />
                 </Frame>
               </AutoLayout>
@@ -460,7 +508,7 @@ function Aninote() {
                     value={elementBlock.elementName}
                     onTextEditEnd={(event) => handleElementInput(index, event)}
                     placeholder="element-name"
-                    fill="#8981F7"
+                    fill={color}
                     width={"fill-parent"}
                     fontSize={12}
                     lineHeight={20}
@@ -487,7 +535,7 @@ function Aninote() {
                     >
                       <Frame
                         name="icon-remove"
-                        stroke="#8981F7"
+                        stroke={color}
                         cornerRadius={14}
                         width={16}
                         height={16}
@@ -496,7 +544,7 @@ function Aninote() {
                           name="icon-minus"
                           x={4}
                           y={9}
-                          fill="#8981F7"
+                          fill={color}
                           cornerRadius={4}
                           rotation={90}
                           width={2}
@@ -539,16 +587,25 @@ function Aninote() {
                             width={16}
                             height={16}
                           >
-                            <SVG
-                              name="icon-plus"
+                            <Rectangle
+                              name="icon-plus-h"
                               x={4}
-                              y={4}
+                              y={9}
+                              fill="#aaaaaa"
+                              cornerRadius={4}
+                              rotation={90}
+                              width={2}
                               height={8}
+                            />
+                            <Rectangle
+                              name="icon-plus-v"
+                              x={7}
+                              y={12}
+                              fill="#aaaaaa"
+                              cornerRadius={4}
+                              rotation={90}
                               width={8}
-                              src="<svg width='8' height='8' viewBox='0 0 8 8' fill='none' xmlns='http://www.w3.org/2000/svg'>
-  <path fill-rule='evenodd' clip-rule='evenodd' d='M3 7C3 7.55228 3.44772 8 4 8C4.55228 8 5 7.55228 5 7V5H7C7.55228 5 8 4.55228 8 4C8 3.44772 7.55228 3 7 3H5V1C5 0.447715 4.55228 0 4 0C3.44772 0 3 0.447715 3 1V3H1C0.447715 3 0 3.44772 0 4C0 4.55228 0.447715 5 1 5H3V7Z' fill='#AAAAAA'/>
-  </svg>
-  "
+                              height={2}
                             />
                           </Frame>
                         </AutoLayout>
